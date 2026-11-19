@@ -56,31 +56,60 @@ Every main question in blocks must also appear once in questions. Do not duplica
 """
 
 
-def parse_with_gemini(api_key: str, message: str, model: str = "gemini-2.5-flash") -> dict[str, Any]:
+
+def parse_with_gemini(
+    api_key: str,
+    message: str,
+    model: str = "gemini-3.8-flash"
+) -> dict[str, Any]:
     from google import genai
-    from google.genai import types
 
     client = genai.Client(api_key=api_key)
-    response = client.models.generate_content(
+
+    interaction = client.interactions.create(
         model=model,
-        contents=[SYSTEM_PROMPT, "\nFORWARDED QUESTION SET:\n", message],
-        config=types.GenerateContentConfig(
-            response_mime_type="application/json",
-            temperature=0.1,
-        ),
+        input=f"""
+{SYSTEM_PROMPT}
+
+FORWARDED QUESTION SET:
+{message}
+""",
+        response_format=[
+            {
+                "type": "text",
+                "mime_type": "application/json"
+            }
+        ],
     )
-    raw = response.text or ""
-    raw = re.sub(r"^```(?:json)?\s*|\s*```$", "", raw.strip(), flags=re.I)
+
+    raw = interaction.output_text or ""
+    raw = re.sub(
+        r"^```(?:json)?\s*|\s*```$",
+        "",
+        raw.strip(),
+        flags=re.I
+    )
+
     data = json.loads(raw)
+
     if not isinstance(data, dict) or "metadata" not in data or "blocks" not in data:
-        raise ValueError("Gemini response ka structure sahi nahi hai. Dobara parse karke dekhein.")
+        raise ValueError(
+            "Gemini response ka structure sahi nahi hai. Dobara parse karke dekhein."
+        )
+
     data.setdefault("questions", [])
     data.setdefault("general_instructions", [])
     data.setdefault("section_totals", [])
     data.setdefault("warnings", [])
+
     for question in data.get("questions", []):
-        question.setdefault("original_effective_marks", question.get("effective_marks"))
+        question.setdefault(
+            "original_effective_marks",
+            question.get("effective_marks")
+        )
+
     return data
+
 
 
 def _is_gurmukhi(text: str) -> bool:
