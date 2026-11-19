@@ -28,7 +28,7 @@ st.info("Aapka question-set text aur image is app mein permanently save nahi hot
 with st.sidebar:
     st.subheader("Gemini API key")
     api_key = st.text_input("Apni Gemini API key daalein", type="password", key="gemini_api_key", help="Google AI Studio se API key banayein: aistudio.google.com/app/apikey")
-    model = st.selectbox("AI model", ["gemini-2.5-flash", "gemini-2.0-flash"], index=0)
+    model = "gemini-3.8-flash"
     st.caption("API key is session-only; app ise file ya database mein save nahi karti.")
     st.markdown("[Gemini API key banayein](https://aistudio.google.com/app/apikey)")
 
