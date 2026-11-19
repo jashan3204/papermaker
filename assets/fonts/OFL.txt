@@ -1,0 +1,1 @@
+The Noto Sans Devanagari and Noto Sans Gurmukhi font files in this folder are distributed under the SIL Open Font License 1.1. The full license text is available at https://openfontlicense.org/ and in the Noto Fonts project repository: https://github.com/notofonts/devanagari and https://github.com/notofonts/gurmukhi.

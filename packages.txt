@@ -1,0 +1,4 @@
+libreoffice
+fonts-noto-core
+fonts-liberation
+fontconfig
